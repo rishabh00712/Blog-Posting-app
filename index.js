@@ -1,10 +1,10 @@
 import express from "express";
 import bodyParser from "body-parser";
-const serverless = require('serverless-http');
+
 
 const app = express();
 const port = 4000;
-const router = express.Router();
+
 
 // In-memory data store
 let posts = [
@@ -93,9 +93,6 @@ app.delete("/posts/:id",(req,res)=>{
   }
 })
 
-
-app.use('/.netlify/functions/api', router);
-
-
-module.exports = app;
-module.exports.handler = serverless(app);
+app.listen(port, () => {
+  console.log(`Backend server is running on http://localhost:${port}`);
+});

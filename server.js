@@ -18,6 +18,7 @@ app.get("/", async (req, res) => {
     console.log(response);
     res.render("index.ejs", { posts: response.data });
   } catch (error) {
+    console.log("error");
     res.status(500).json({ message: "Error fetching posts" });
   }
 });
@@ -77,6 +78,23 @@ app.get("/api/posts/delete/:id", async (req, res) => {
   }
 });
 
+const PING_URL = "https://blog-posting-app-2.onrender.com"; // Replace with your actual website URL
+
+// Function to keep the server alive
+const keepAlive = async () => {
+  try {
+    await axios.get(PING_URL);
+    console.log("Pinged successfully!");
+  } catch (error) {
+    console.error("Ping failed:", error.message);
+  }
+};
+
+// Ping the server every 10 minutes
+setInterval(keepAlive, 1000*60*5);
+
 app.listen(port, () => {
   console.log(`Backend server is running on http://localhost:${port}`);
+  keepAlive();
 });
+

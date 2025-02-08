@@ -1,8 +1,10 @@
 import express from "express";
 import bodyParser from "body-parser";
+const serverless = require('serverless-http');
 
 const app = express();
 const port = 4000;
+const router = express.Router();
 
 // In-memory data store
 let posts = [
@@ -42,7 +44,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //CHALLENGE 1: GET All posts
 app.get("/posts",(req,res)=>{
-  res.json(posts); 
+  res.json(posts);
 })
 //CHALLENGE 2: GET a specific post by id
 app.get("/posts/:id",(req,res)=>{
@@ -90,6 +92,10 @@ app.delete("/posts/:id",(req,res)=>{
     res.status(404).json({ message: "Post not found" });
   }
 })
-app.listen(port, () => {
-  console.log(`API is running at http://localhost:${port}`);
-});
+
+
+app.use('/.netlify/functions/api', router);
+
+
+module.exports = app;
+module.exports.handler = serverless(app);
